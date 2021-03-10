@@ -1,7 +1,8 @@
-export const markup = `<figure class="recipe__fig">
+export const recipeView = (parentEl, recipe = {}) => {
+  const html = `<figure class="recipe__fig">
                     <img src=${recipe.image} alt="${
-  recipe.title
-}" class="recipe__img" />
+    recipe.title
+  }" class="recipe__img" />
                     <h1 class="recipe__title">
                         <span>${recipe.title}</span>
                     </h1>
@@ -93,3 +94,6 @@ export const markup = `<figure class="recipe__fig">
                         </svg>
                     </a>
                 </div>`;
+
+  return parentEl.insertAdjacentHTML('afterbegin', html);
+};
