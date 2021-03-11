@@ -17,12 +17,17 @@ class RecipeView extends View {
   _clear() {
     this.#parentEl.innerHTML = '';
   }
-  renderSpinner = function () {
+  renderSpinner() {
     Spinner.start(this.#parentEl);
-  };
-  removeSpinner = function () {
+  }
+  removeSpinner() {
     Spinner.remove(this.#parentEl);
-  };
+  }
+
+  //Publisher
+  addHandlerRender(handler) {
+    ['hashchange', 'load'].forEach(e => window.addEventListener(e, handler));
+  }
 }
 
 export default new RecipeView();
