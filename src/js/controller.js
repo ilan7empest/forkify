@@ -36,7 +36,7 @@ const controlRecipes = async () => {
     //   ? (message.style.display = 'none')
     //   : (message.style.display = 'block');
   } catch (err) {
-    console.error(err.message);
+    recipeView.renderError(err, 'sucsess');
   }
 };
 

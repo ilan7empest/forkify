@@ -1,12 +1,16 @@
 import { Fraction } from 'fractional';
 import View from './View';
 import * as Spinner from '../views/Spinner';
+import customError from '../views/CustomError';
+
+console.log(customError);
 
 import icons from 'url:../img/icons.svg';
 
 class RecipeView extends View {
   #parentEl = document.querySelector('.recipe');
   #data;
+  #errMsg = "Recipe wasn't found. Try another one";
 
   render(data) {
     this.#data = data;
@@ -22,6 +26,10 @@ class RecipeView extends View {
   }
   removeSpinner() {
     Spinner.remove(this.#parentEl);
+  }
+  renderError(err = this.#errMsg, type) {
+    this._clear();
+    customError.render(this.#parentEl, err, type);
   }
 
   //Publisher

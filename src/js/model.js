@@ -27,7 +27,7 @@ const loadRecipe = async id => {
     };
     populateRecipe(recipe);
   } catch (err) {
-    console.error(err.message);
+    throw err;
   }
 };
 
