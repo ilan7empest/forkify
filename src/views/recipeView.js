@@ -1,5 +1,34 @@
-export const recipeView = (parentEl, recipe = {}) => {
-  const html = `<figure class="recipe__fig">
+import { Fraction } from 'fractional';
+import View from './View';
+import * as Spinner from '../views/Spinner';
+
+import icons from 'url:../img/icons.svg';
+
+class RecipeView extends View {
+  #parentEl = document.querySelector('.recipe');
+  #data;
+
+  render(data) {
+    this.#data = data;
+    const markup = generateMarkup(this.#data);
+    this._clear();
+    this.#parentEl.insertAdjacentHTML('afterbegin', markup);
+  }
+  _clear() {
+    this.#parentEl.innerHTML = '';
+  }
+  renderSpinner = function () {
+    Spinner.start(this.#parentEl);
+  };
+  removeSpinner = function () {
+    Spinner.remove(this.#parentEl);
+  };
+}
+
+export default new RecipeView();
+
+const generateMarkup = (recipe = {}) => {
+  return `<figure class="recipe__fig">
                     <img src=${recipe.image} alt="${
     recipe.title
   }" class="recipe__img" />
@@ -56,20 +85,7 @@ export const recipeView = (parentEl, recipe = {}) => {
                 <div class="recipe__ingredients">
                     <h2 class="heading--2">Recipe ingredients</h2>
                     <ul class="recipe__ingredient-list">
-                      ${recipe.ingredients
-                        .map(ingr => {
-                          return `<li class="recipe__ingredient">
-                                  <svg class="recipe__icon">
-                                    <use href="${icons}#icon-check"></use>
-                                  </svg>
-                                  <div class="recipe__quantity">${ingr.quantity}</div>
-                                  <div class="recipe__description">
-                                    <span class="recipe__unit">${ingr.unit}</span>
-                                    ${ingr.description}
-                                  </div>
-                                </li>`;
-                        })
-                        .join('')}
+                      ${recipe.ingredients.map(ingredients).join('')}
 
                     </ul>
                 </div>
@@ -94,6 +110,19 @@ export const recipeView = (parentEl, recipe = {}) => {
                         </svg>
                     </a>
                 </div>`;
+};
 
-  return parentEl.insertAdjacentHTML('afterbegin', html);
+const ingredients = ingr => {
+  return `<li class="recipe__ingredient">
+            <svg class="recipe__icon">
+              <use href="${icons}#icon-check"></use>
+            </svg>
+            <div class="recipe__quantity">${
+              ingr.quantity ? new Fraction(ingr.quantity).toString() : ''
+            }</div>
+            <div class="recipe__description">
+              <span class="recipe__unit">${ingr.unit}</span>
+              ${ingr.description}
+            </div>
+          </li>`;
 };

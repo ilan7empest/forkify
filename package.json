@@ -10,12 +10,20 @@
   "author": "ila7empest",
   "license": "ISC",
   "devDependencies": {
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
     "@parcel/transformer-sass": "^2.0.0-nightly.622",
     "parcel": "^2.0.0-beta.1",
     "sass": "^1.32.8"
   },
   "dependencies": {
+    "@parcel/transformer-js": "^2.0.0-nightly.335",
     "core-js": "^3.9.1",
+    "fractional": "^1.0.0",
     "regenerator-runtime": "^0.13.7"
+  },
+  "babel": {
+    "plugins": [
+      "@babel/plugin-proposal-class-properties"
+    ]
   }
 }

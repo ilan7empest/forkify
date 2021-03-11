@@ -4,50 +4,31 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
 //Moudles
-import { loadRecipe, state } from './model';
-import { recipeView } from '../views/recipeView';
-import * as Spinner from '../views/Spinner';
-
-// Style + assests
-import icons from 'url:../img/icons.svg';
-
-const recipeContainer = document.querySelector('.recipe');
-
-const timeout = function (s) {
-  return new Promise(function (_, reject) {
-    setTimeout(function () {
-      reject(new Error(`Request took too long! Timeout after ${s} second`));
-    }, s * 1000);
-  });
-};
+//Model
+import * as model from './model';
+//View
+import recipeView from '../views/recipeView';
 
 // https://forkify-api.herokuapp.com/v2
 
 ///////////////////////////////////////
-const BaseURL = 'https://forkify-api.herokuapp.com/api/v2/recipes';
 
-const fetchData = async () => {
-  Spinner.start(recipeContainer);
+const controlRecipes = async () => {
   try {
-    const response = await fetch(BaseURL + `/5ed6604591c37cdc054bc886`);
-    let data = await response.json();
-    if (!response.ok) throw new Error(data.message);
+    let id = location.hash.slice(1);
+    if (!id) return;
 
-    let { recipe } = data.data;
-    recipe = {
-      id: recipe.id,
-      image: recipe.image_url,
-      coockingTime: recipe.cooking_time,
-      ingredients: recipe.ingredients,
-      publisher: recipe.publisher,
-      servings: recipe.servings,
-      sourceURL: recipe.source_url,
-      title: recipe.title,
-    };
-    loadRecipe(recipe);
-    Spinner.remove(recipeContainer);
+    // Spinner.start(recipeContainer);
+    recipeView.renderSpinner();
 
-    // recipeView(recipeContainer, recipe);
+    await model.loadRecipe(id);
+
+    recipeView.removeSpinner();
+
+    // console.log(recipeView.constructor.name === 'RecipeView');
+
+    recipeView.render(model.state.recipe);
+    console.log(recipeView);
 
     // const message = recipeContainer.querySelector('.message');
 
@@ -55,7 +36,8 @@ const fetchData = async () => {
     //   ? (message.style.display = 'none')
     //   : (message.style.display = 'block');
   } catch (err) {
-    console.log('Error', err.message);
+    console.error(err.message);
   }
 };
-fetchData();
+
+['hashchange', 'load'].forEach(e => window.addEventListener(e, controlRecipes));
