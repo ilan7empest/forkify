@@ -1,52 +1,24 @@
 import { Fraction } from 'fractional';
 import View from './View';
-import * as Spinner from '../views/Spinner';
-import customError from '../views/CustomError';
-
-console.log(customError);
 
 import icons from 'url:../img/icons.svg';
 
 class RecipeView extends View {
-  #parentEl = document.querySelector('.recipe');
-  #data;
-  #errMsg = "Recipe wasn't found. Try another one";
-
-  render(data) {
-    this.#data = data;
-    const markup = generateMarkup(this.#data);
-    this._clear();
-    this.#parentEl.insertAdjacentHTML('afterbegin', markup);
-  }
-  _clear() {
-    this.#parentEl.innerHTML = '';
-  }
-  renderSpinner() {
-    Spinner.start(this.#parentEl);
-  }
-  removeSpinner() {
-    Spinner.remove(this.#parentEl);
-  }
-  renderError(err = this.#errMsg, type) {
-    this._clear();
-    customError.render(this.#parentEl, err, type);
-  }
+  _parentEl = document.querySelector('.recipe');
+  _errMsg = "Recipe wasn't found. Try another one";
 
   //Publisher
   addHandlerRender(handler) {
     ['hashchange', 'load'].forEach(e => window.addEventListener(e, handler));
   }
-}
 
-export default new RecipeView();
-
-const generateMarkup = (recipe = {}) => {
-  return `<figure class="recipe__fig">
-                    <img src=${recipe.image} alt="${
-    recipe.title
-  }" class="recipe__img" />
+  _generateMarkup() {
+    return `<figure class="recipe__fig">
+                    <img src=${this._data.image} alt="${
+      this._data.title
+    }" class="recipe__img" />
                     <h1 class="recipe__title">
-                        <span>${recipe.title}</span>
+                        <span>${this._data.title}</span>
                     </h1>
                 </figure>
 
@@ -56,7 +28,7 @@ const generateMarkup = (recipe = {}) => {
                         <use href="${icons}#icon-clock"></use>
                         </svg>
                         <span class="recipe__info-data recipe__info-data--minutes">${
-                          recipe.coockingTime
+                          this._data.coockingTime
                         }</span>
                         <span class="recipe__info-text">minutes</span>
                     </div>
@@ -65,7 +37,7 @@ const generateMarkup = (recipe = {}) => {
                         <use href="${icons}#icon-users"></use>
                         </svg>
                         <span class="recipe__info-data recipe__info-data--people">${
-                          recipe.servings
+                          this._data.servings
                         }</span>
                         <span class="recipe__info-text">servings</span>
 
@@ -98,7 +70,7 @@ const generateMarkup = (recipe = {}) => {
                 <div class="recipe__ingredients">
                     <h2 class="heading--2">Recipe ingredients</h2>
                     <ul class="recipe__ingredient-list">
-                      ${recipe.ingredients.map(ingredients).join('')}
+                      ${this._data.ingredients.map(ingredients).join('')}
 
                     </ul>
                 </div>
@@ -108,13 +80,13 @@ const generateMarkup = (recipe = {}) => {
                     <p class="recipe__directions-text">
                         This recipe was carefully designed and tested by
                         <span class="recipe__publisher">${
-                          recipe.publisher
+                          this._data.publisher
                         }</span>. Please check out
                         directions at their website.
                     </p>
                     <a
                         class="btn--small recipe__btn"
-                        href=${recipe.sourceURL}
+                        href=${this._data.sourceURL}
                         target="_blank"
                     >
                         <span>Directions</span>
@@ -123,7 +95,10 @@ const generateMarkup = (recipe = {}) => {
                         </svg>
                     </a>
                 </div>`;
-};
+  }
+}
+
+export default new RecipeView();
 
 const ingredients = ingr => {
   return `<li class="recipe__ingredient">

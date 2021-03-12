@@ -9,10 +9,10 @@ const timeout = function (s) {
   });
 };
 
-export const AJAX = async (params = '', method = 'GET') => {
+export const AJAX = async (params = '', method = 'GET', body = null) => {
   try {
     const response = await Promise.race([
-      fetch(`${BaseURL}/${params}`, { method }),
+      fetch(`${BaseURL}${params}`, { method, body }),
       timeout(TIMEOUT_SEC),
     ]);
 

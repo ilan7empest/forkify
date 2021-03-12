@@ -3,7 +3,10 @@ import { AJAX } from './helpers';
 
 const state = {
   recipe: {},
-  search: {},
+  search: {
+    query: '',
+    results: [],
+  },
   bookmarks: [],
 };
 
@@ -13,7 +16,7 @@ const populateRecipe = (data = {}) => {
 
 const loadRecipe = async id => {
   try {
-    const { data } = await AJAX(id);
+    const { data } = await AJAX('/' + id);
     let { recipe } = data;
     recipe = {
       id: recipe.id,
@@ -31,7 +34,26 @@ const loadRecipe = async id => {
   }
 };
 
-export { state, loadRecipe };
+const loadSearchResults = async searchQuery => {
+  try {
+    state.search.query = searchQuery;
+    const { data } = await AJAX(
+      `?search=${searchQuery}&key=f8a64eb6-c721-49d5-8112-a28577770385`
+    );
+    state.search.results = data.recipes.map(recipe => {
+      return {
+        id: recipe.id,
+        title: recipe.title,
+        publisher: recipe.publisher,
+        image: recipe.image_url,
+      };
+    });
+  } catch (err) {
+    throw err;
+  }
+};
+
+export { state, loadRecipe, loadSearchResults };
 
 /*
 const lights = new Array(101).fill(true);
