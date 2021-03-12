@@ -55,7 +55,7 @@ const controlSearchResults = async () => {
     //
     previewView.removeSpinner();
 
-    previewView.render(model.state.search.results);
+    previewView.render(model.pagination(1, 10));
   } catch (err) {
     previewView.renderError(err);
   }

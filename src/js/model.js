@@ -6,6 +6,7 @@ const state = {
   search: {
     query: '',
     results: [],
+    page: 1,
   },
   bookmarks: [],
 };
@@ -53,7 +54,32 @@ const loadSearchResults = async searchQuery => {
   }
 };
 
-export { state, loadRecipe, loadSearchResults };
+/*const paginate = followers => {
+  const itemsPerPage = 10;
+  const numberOfPages = Math.ceil(followers.length / itemsPerPage);
+
+  const newFollowers = Array.from({ length: numberOfPages }, (_, index) => {
+    const start = index * itemsPerPage;
+    return followers.slice(start, start + itemsPerPage);
+  });
+
+  return newFollowers;
+};*/
+
+const pagination = (page = state.search.page, itemsPerPage = 10) => {
+  state.search.page = page;
+  const { results } = state.search;
+  const pages = Math.ceil(results.length / itemsPerPage);
+
+  let newResults = Array.from({ length: pages }, (_, index) => {
+    const start = index * itemsPerPage;
+    return results.slice(start, start + itemsPerPage);
+  });
+
+  return newResults[page - 1];
+};
+
+export { state, loadRecipe, loadSearchResults, pagination };
 
 /*
 const lights = new Array(101).fill(true);
