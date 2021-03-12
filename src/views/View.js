@@ -1,4 +1,4 @@
-import * as Spinner from '../views/Spinner';
+import Spinner from '../views/Spinner';
 import customError from '../views/CustomError';
 class View {
   _data;
@@ -15,10 +15,8 @@ class View {
     this._parentEl.innerHTML = '';
   }
   renderSpinner() {
-    Spinner.start(this._parentEl);
-  }
-  removeSpinner() {
-    Spinner.remove(this._parentEl);
+    this._clear();
+    Spinner(this._parentEl);
   }
   renderError(err = this._errMsg, type) {
     this._clear();

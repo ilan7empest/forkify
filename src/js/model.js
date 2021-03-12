@@ -1,5 +1,6 @@
 // import controller from './controller';
 import { AJAX } from './helpers';
+import { ITEMS_PER_PAGE } from './constants';
 
 const state = {
   recipe: {},
@@ -7,6 +8,7 @@ const state = {
     query: '',
     results: [],
     page: 1,
+    itemsPerPage: ITEMS_PER_PAGE,
   },
   bookmarks: [],
 };
@@ -54,32 +56,22 @@ const loadSearchResults = async searchQuery => {
   }
 };
 
-/*const paginate = followers => {
-  const itemsPerPage = 10;
-  const numberOfPages = Math.ceil(followers.length / itemsPerPage);
-
-  const newFollowers = Array.from({ length: numberOfPages }, (_, index) => {
-    const start = index * itemsPerPage;
-    return followers.slice(start, start + itemsPerPage);
-  });
-
-  return newFollowers;
-};*/
-
-const pagination = (page = state.search.page, itemsPerPage = 10) => {
+const getSearchResultsPage = (
+  page = state.search.page,
+  itemsPerPage = state.search.itemsPerPage
+) => {
   state.search.page = page;
+  state.search.itemsPerPage = itemsPerPage;
+
   const { results } = state.search;
-  const pages = Math.ceil(results.length / itemsPerPage);
-
-  let newResults = Array.from({ length: pages }, (_, index) => {
-    const start = index * itemsPerPage;
+  let newResults = () => {
+    const start = (state.search.page - 1) * itemsPerPage;
     return results.slice(start, start + itemsPerPage);
-  });
-
-  return newResults[page - 1];
+  };
+  return newResults();
 };
 
-export { state, loadRecipe, loadSearchResults, pagination };
+export { state, loadRecipe, loadSearchResults, getSearchResultsPage };
 
 /*
 const lights = new Array(101).fill(true);

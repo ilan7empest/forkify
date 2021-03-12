@@ -10,6 +10,7 @@ import * as model from './model';
 import recipeView from '../views/recipeView';
 import previewView from '../views/previewView';
 import searchView from '../views/searchView';
+import pagination from '../views/paginationView';
 
 if (module.hot) {
   module.hot.accept();
@@ -26,8 +27,6 @@ const controlRecipes = async () => {
     recipeView.renderSpinner();
 
     await model.loadRecipe(id);
-
-    recipeView.removeSpinner();
 
     // console.log(recipeView.constructor.name === 'RecipeView');
 
@@ -49,21 +48,31 @@ const controlSearchResults = async () => {
     previewView.renderSpinner();
 
     const searchValue = searchView.getQuery();
-    if (!searchValue) return;
+    if (!searchValue) return previewView.renderError('No recipes');
 
     await model.loadSearchResults(searchValue);
     //
-    previewView.removeSpinner();
-
-    previewView.render(model.pagination(1, 10));
+    previewView.render(model.getSearchResultsPage());
+    pagination.render(model.state.search);
   } catch (err) {
     previewView.renderError(err);
   }
 };
 
+const controlPagination = pageNum => {
+  previewView.render(model.getSearchResultsPage(pageNum));
+  pagination.render(model.state.search);
+  /*if (value === 'increment') {
+    previewView.render(model.getSearchResultsPage(++model.state.search.page));
+  } else {
+    previewView.render(model.getSearchResultsPage(--model.state.search.page));
+  }*/
+};
+
 const init = () => {
   recipeView.addHandlerRender(controlRecipes);
   searchView.addHandlerSearch(controlSearchResults);
+  pagination.addHandlePagination(controlPagination);
 };
 
 init();

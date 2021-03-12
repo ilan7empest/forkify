@@ -6,12 +6,7 @@ const html = `<div class="spinner">
                   </svg>
                 </div>`;
 
-const start = parentEl => {
+export default Spinner = parentEl => {
   parentEl.innerHTML = '';
   parentEl.insertAdjacentHTML('afterbegin', html);
 };
-const remove = parentEl => {
-  parentEl.querySelector('.spinner').remove();
-};
-
-export { start, remove };
