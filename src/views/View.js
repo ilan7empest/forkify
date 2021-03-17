@@ -1,26 +1,28 @@
-import Spinner from '../views/Spinner';
-import customError from '../views/CustomError';
+import spinner from './spinner';
+import errorView from './errorView';
 class View {
   _data;
   render(data) {
     if (!data || (Array.isArray(data) && data.length === 0))
-      return this.renderError();
-
+      return this.error();
     this._data = data;
     const markup = this._generateMarkup();
     this._clear();
     this._parentEl.insertAdjacentHTML('afterbegin', markup);
   }
-  _clear() {
-    this._parentEl.innerHTML = '';
-  }
   renderSpinner() {
     this._clear();
-    Spinner(this._parentEl);
+    this._parentEl.insertAdjacentHTML('afterbegin', spinner._generateMarkup());
   }
-  renderError(err = this._errMsg, type) {
+  error(err = this._errorMsg) {
     this._clear();
-    customError.render(this._parentEl, err, type);
+    this._parentEl.insertAdjacentHTML(
+      'afterbegin',
+      errorView._generateMarkup(err)
+    );
+  }
+  _clear() {
+    this._parentEl.innerHTML = '';
   }
 }
 

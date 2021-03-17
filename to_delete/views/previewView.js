@@ -6,14 +6,11 @@ class PreviewView extends View {
   _errMsg = "Recipes were't found. Try another one";
 
   _generateMarkup() {
-    return this._data.map(markup).join('');
+    return this._data.map(this._markup).join('');
   }
-}
 
-export default new PreviewView();
-
-const markup = result => {
-  return `<li class="preview">
+  _markup(result) {
+    return `<li class="preview">
             <a class="preview__link preview__link--active" href="#${result.id}">
               <figure class="preview__fig">
                 <img src=${result.image} alt="${result.title}" />
@@ -29,4 +26,7 @@ const markup = result => {
               </div>
             </a>
           </li>`;
-};
+  }
+}
+
+export default new PreviewView();
