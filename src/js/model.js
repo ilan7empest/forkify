@@ -1,11 +1,13 @@
-import { async } from 'regenerator-runtime';
 import { AJAX } from './helpers';
+import { PAGINATE_PER_PAGE } from './constants';
 
 const state = {
   recipe: {},
   search: {
     query: '',
     results: [],
+    page: 1,
+    perPage: PAGINATE_PER_PAGE,
   },
   bookmarks: [],
 };
@@ -43,4 +45,19 @@ const loadSearchResults = async query => {
   }
 };
 
-export { loadRecipe, loadSearchResults, state };
+const getSearchResultsPage = (
+  page = state.search.page,
+  perPage = state.search.perPage
+) => {
+  state.search.page = page;
+  state.search.perPage = perPage;
+
+  const slicedResults = () => {
+    const start = (state.search.page - 1) * state.search.perPage;
+    return state.search.results.slice(start, start + state.search.perPage);
+  };
+
+  return slicedResults();
+};
+
+export { loadRecipe, loadSearchResults, getSearchResultsPage, state };
