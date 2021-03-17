@@ -60,4 +60,22 @@ const getSearchResultsPage = (
   return slicedResults();
 };
 
-export { loadRecipe, loadSearchResults, getSearchResultsPage, state };
+const updateServings = servings => {
+  const updateIngredients = state.recipe.ingredients.map(ingr => {
+    ingr.quantity = (ingr.quantity * servings) / state.recipe.servings;
+    return ingr;
+  });
+  state.recipe = {
+    ...state.recipe,
+    ingredients: updateIngredients,
+    servings,
+  };
+};
+
+export {
+  loadRecipe,
+  loadSearchResults,
+  getSearchResultsPage,
+  updateServings,
+  state,
+};
