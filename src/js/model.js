@@ -15,6 +15,7 @@ const state = {
 const loadRecipe = async id => {
   try {
     let { recipe } = await AJAX(id);
+    // const existingBookmark = state.bookmarks.find(bm => bm.id === recipe.id);
     state.recipe = {
       id: recipe.id,
       cookingTime: recipe.cooking_time,
@@ -25,6 +26,10 @@ const loadRecipe = async id => {
       title: recipe.title,
       sourceUrl: recipe.source_url,
     };
+
+    // if (existingBookmark) state.recipe.bookmarked = true;
+    if (state.bookmarks.some(bm => bm.id === recipe.id))
+      state.recipe.bookmarked = true;
   } catch (err) {
     throw err;
   }
@@ -40,6 +45,7 @@ const loadSearchResults = async query => {
       title: recipe.title,
       publisher: recipe.publisher,
     }));
+    state.search.page = 1;
   } catch (err) {
     throw err;
   }
@@ -72,10 +78,40 @@ const updateServings = servings => {
   };
 };
 
+const addToBookmark = recipe => {
+  if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
+  // const existingBookmark = state.bookmarks.find(bm => bm.id === recipe.id);
+  // if (existingBookmark) return;
+  state.bookmarks = [...state.bookmarks, recipe];
+  setLocalStorage('bookmarks', state.bookmarks);
+};
+
+const removeBookmark = id => {
+  if (id === state.recipe.id) state.recipe.bookmarked = false;
+  const updatedBookmarks = state.bookmarks.filter(bm => bm.id !== id);
+  // const index = state.bookmarks.findIndex(bm => bm.id === id);
+  // const updatedBookmarks = state.bookmarks.splice(index, 1);
+  state.bookmarks = updatedBookmarks;
+  setLocalStorage('bookmarks', updatedBookmarks);
+};
+
+const setLocalStorage = (key, data = []) => {
+  localStorage.setItem(key, JSON.stringify(data));
+};
+const getLocalStorage = () => {
+  const bookmarks = JSON.parse(localStorage.getItem('bookmarks'));
+  if (bookmarks) state.bookmarks = bookmarks;
+};
+
+getLocalStorage();
+
 export {
   loadRecipe,
   loadSearchResults,
   getSearchResultsPage,
   updateServings,
+  addToBookmark,
+  removeBookmark,
+  getLocalStorage,
   state,
 };

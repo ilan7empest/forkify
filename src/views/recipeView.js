@@ -6,6 +6,7 @@ class RecipeView extends View {
   _parentEl = document.querySelector('.recipe');
   _errorMsg = 'Recipe could not be found';
   _generateMarkup() {
+    // console.log(this._data);
     return `<figure class="recipe__fig">
                 <img src=${this._data.image} alt="${
       this._data.title
@@ -57,9 +58,11 @@ class RecipeView extends View {
                             <use href="${icons}#icon-user"></use>
                             </svg>
                         </div>
-                        <button class="btn--round">
+                        <button class="btn--round btn--bookmark">
                             <svg class="">
-                            <use href="${icons}#icon-bookmark-fill"></use>
+                            <use href="${icons}#icon-bookmark${
+      this._data?.bookmarked ? '-fill' : ''
+    }"></use>
                             </svg>
                         </button>
                     </div>
@@ -103,6 +106,20 @@ class RecipeView extends View {
   }
   addHandleRender(handler) {
     ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
+  }
+  addHandlerAddBookmark(handler) {
+    this._parentEl.addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn--bookmark');
+      if (!btn) return;
+      handler();
+    });
+  }
+  addHandlerRemoveBookmark(handler) {
+    this._parentEl.addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn--bookmark');
+      if (!btn) return;
+      handler();
+    });
   }
 }
 
