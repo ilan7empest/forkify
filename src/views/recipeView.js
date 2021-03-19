@@ -1,6 +1,8 @@
 import View from './View';
 import { Fraction } from 'fractional';
 
+import { API_KEY } from '../js/constants';
+
 import icons from 'url:../img/icons.svg';
 class RecipeView extends View {
   _parentEl = document.querySelector('.recipe');
@@ -53,10 +55,14 @@ class RecipeView extends View {
                             </div>
                         </div>
 
-                        <div class="recipe__user-generated">
-                            <svg>
-                            <use href="${icons}#icon-user"></use>
-                            </svg>
+                       <div class="recipe__user-generated">
+                            ${
+                              this._data.key === API_KEY
+                                ? `<svg>
+                                    <use href="${icons}#icon-user"></use>
+                                  </svg>`
+                                : ''
+                            }
                         </div>
                         <button class="btn--round btn--bookmark">
                             <svg class="">

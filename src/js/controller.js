@@ -8,6 +8,7 @@ import searchView from '../views/searchView';
 import resultsView from '../views/resultsView';
 import pagination from '../views/paginationView';
 import bookmarkView from '../views/bookmarkView';
+import addRecipeView from '../views/addRecipeView';
 
 // https://forkify-api.herokuapp.com/api/v2/recipes
 
@@ -76,6 +77,30 @@ const renderBookmarks = () => {
   bookmarkView.render(model.state.bookmarks);
 };
 
+const controlAddRecipe = async data => {
+  try {
+    addRecipeView.renderSpinner();
+
+    await model.uploadRecipe(data);
+
+    recipeView.render(model.state.recipe);
+
+    bookmarkView.render(model.state.bookmarks);
+
+    addRecipeView.success();
+    setTimeout(() => {
+      addRecipeView.toogleModal();
+      history.pushState(
+        {},
+        model.state.recipe.title,
+        `#${model.state.recipe.id}`
+      );
+    }, 2000);
+  } catch (err) {
+    addRecipeView.error(err);
+  }
+};
+
 function init() {
   bookmarkView.addHandlerBookmarks(renderBookmarks);
   recipeView.addHandleRender(controlRecipes);
@@ -85,6 +110,8 @@ function init() {
   pagination.addHandlerPaginate(controlPagination);
 
   recipeView.addHandlerAddBookmark(controlAddBookmark);
+
+  addRecipeView.addHandlerUpload(controlAddRecipe);
 }
 
 init();

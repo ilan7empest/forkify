@@ -56,6 +56,13 @@ class View {
       errorView._generateMarkup(err)
     );
   }
+  success(success = this._message) {
+    this._clear();
+    this._parentEl.insertAdjacentHTML(
+      'afterbegin',
+      errorView._generateMarkup(success, false)
+    );
+  }
   _clear() {
     this._parentEl.innerHTML = '';
   }

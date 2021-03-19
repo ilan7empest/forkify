@@ -2,14 +2,16 @@ import View from './View';
 import icons from 'url:../img/icons.svg';
 
 class ErrorView {
-  _generateMarkup(err) {
-    return `<div class="error">
+  _generateMarkup(msg, isError = true) {
+    return `<div class=${isError ? 'error' : 'message'}>
             <div>
               <svg>
-                <use href="${icons}#icon-alert-triangle"></use>
+                <use href="${icons}#icon-${
+      isError ? 'alert-triangle' : 'smile'
+    }"></use>
               </svg>
             </div>
-            <p>${err}</p>
+            <p>${msg}</p>
           </div>`;
   }
 }
