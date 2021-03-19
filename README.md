@@ -1,4 +1,4 @@
 # forkify
 
 ## Live Version
-https://app.netlify.com/sites/7empest-forkify/settings/general
+https://7empest-forkify.netlify.app/
